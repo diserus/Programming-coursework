@@ -1,3 +1,5 @@
 # Programming-coursework
 Arcanoid game
-#Чтобы играть распакуйте файлы в папку и запустите Arcanoid.exe
+---
+
+Чтобы играть распакуйте файлы в папку и запустите Arcanoid.exe
