@@ -39,10 +39,12 @@ int main()
     gameOvertxt.setFillColor(sf::Color::Red);
     gameOvertxt.setPosition(250, 300);
     
-    sf::Text continuetxt("Restart", font, 50);
-    continuetxt.setPosition(350,450);
+    sf::Text restarttxt("Restart", font, 50);
+    restarttxt.setFillColor(sf::Color::Red);
+    restarttxt.setPosition(350,450);
 
     sf::Text exittxt("Exit", font, 50);
+    exittxt.setFillColor(sf::Color::Red);
     exittxt.setPosition(415,525);
     
     sf::Text scoretxt;
@@ -108,8 +110,19 @@ int main()
                     case sf::Event::MouseButtonPressed:
                         if (event.mouseButton.button == sf::Mouse::Left)
                         {
-                            if (continuetxt.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+                            if (restarttxt.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
                             {
+                                if (gameOver)
+                                {
+
+                                    exittxt.setFillColor(sf::Color::Red);
+                                    restarttxt.setFillColor(sf::Color::Red);
+                                }
+                                else if (levelComplete)
+                                {
+                                    exittxt.setFillColor(sf::Color::Green);
+                                    restarttxt.setFillColor(sf::Color::Green);
+                                }
                                 gameOver = false;
                                 gameStarted = false;
                                 levelComplete = false;
@@ -119,6 +132,8 @@ int main()
                                 nPlitok = 0;
                                 score = 0;
                                 std::ostringstream scoreStr;
+                                
+
                                 scoretxt.setString(scoreStr.str());
                                 for (int i = 0; i < 10; i++)
                                 {
@@ -134,24 +149,42 @@ int main()
                                 window.close();
                             }
                         }
-                    case sf::Event::MouseMoved:
-                        if (exittxt.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+                    case sf::Event::MouseMoved:                       
+                        if (gameOver)
                         {
-                            exittxt.setFillColor(sf::Color::White);
+                            if (exittxt.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+                            {
+                                exittxt.setFillColor(sf::Color::White);
+                                restarttxt.setFillColor(sf::Color::Red);
+                            }
+                            else if (restarttxt.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+                            {
+                                restarttxt.setFillColor(sf::Color::White);
+                                exittxt.setFillColor(sf::Color::Red);
+                            }
+                            else
+                            {
+                                restarttxt.setFillColor(sf::Color::Red);
+                                exittxt.setFillColor(sf::Color::Red);
+                            }
                         }
-                        else
+                        else if (levelComplete)
                         {
-                            if(gameOver) exittxt.setFillColor(sf::Color::Red);
-                            if (levelComplete) exittxt.setFillColor(sf::Color::Green);
-                        }
-                        if (continuetxt.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
-                        {
-                            continuetxt.setFillColor(sf::Color::White);
-                        }
-                        else
-                        {
-                            if (gameOver) continuetxt.setFillColor(sf::Color::Red);
-                            if (levelComplete) continuetxt.setFillColor(sf::Color::Green);
+                            if (exittxt.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+                            {
+                                exittxt.setFillColor(sf::Color::White);
+                                restarttxt.setFillColor(sf::Color::Green);
+                            }
+                            else if (restarttxt.getGlobalBounds().contains(event.mouseMove.x, event.mouseMove.y))
+                            {
+                                restarttxt.setFillColor(sf::Color::White);
+                                exittxt.setFillColor(sf::Color::Green);
+                            }
+                            else
+                            {
+                                restarttxt.setFillColor(sf::Color::Green);
+                                exittxt.setFillColor(sf::Color::Green);
+                            }
                         }
                         break;
                     default:
@@ -172,7 +205,7 @@ int main()
             player.setSpeed(0);
         }
         
-        ball.move();
+        
         if (ball.isColidePlayer(player)) ball.setSpeedY(-(rand()%9+5));
         for (int i = 0; i < nPlitok; i++)
         {
@@ -200,7 +233,7 @@ int main()
             }
             
         }
-        
+        ball.move();
         if (ball.getPosition().x > window.getSize().x - 30) ball.setSpeedX(-speedBallX);
         if (ball.getPosition().x < 0) ball.setSpeedX(speedBallX);
         if (ball.getPosition().y < 0) ball.setSpeedY(-speedBallY);
@@ -217,7 +250,7 @@ int main()
             window.clear();
             
             window.draw(gameOvertxt);
-            window.draw(continuetxt);
+            window.draw(restarttxt);
             window.draw(exittxt);
             window.display();
         }
@@ -227,7 +260,7 @@ int main()
             
             window.clear();
             window.draw(levelCompletetxt);
-            window.draw(continuetxt);
+            window.draw(restarttxt);
             window.draw(exittxt);
             window.display();
         }
